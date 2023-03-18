@@ -3,10 +3,12 @@ import React, { createContext, useState } from "react";
 export const CharacterContext = createContext();
 
 export const CharacterProvider = ({ children }) => {
-  const [chosenCharacter, setChosenCharacter] = useState();
+  const [clickedCharacters, setClickedCharacters] = useState([]);
 
   return (
-    <CharacterContext.Provider value={{ chosenCharacter, setChosenCharacter }}>
+    <CharacterContext.Provider
+      value={{ clickedCharacters, setClickedCharacters }}
+    >
       {children}
     </CharacterContext.Provider>
   );

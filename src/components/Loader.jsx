@@ -1,7 +1,15 @@
 import React from "react";
 
 const Loader = () => {
-  return <div className="text-[48px]">LOADING</div>;
+  return (
+    <div className="flex justify-center">
+      <div class="lds-facebook">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  );
 };
 
 export default Loader;

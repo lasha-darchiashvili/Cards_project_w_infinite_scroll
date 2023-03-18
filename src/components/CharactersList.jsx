@@ -14,7 +14,8 @@ const CharactersList = (props) => {
   const [pageNumber, setPageNumber] = useState(1);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
-  const { chosenCharacter, setChosenCharacter } = useContext(CharacterContext);
+  const { clickedCharacters, setClickedCharacters } =
+    useContext(CharacterContext);
 
   const url =
     props.page === "LandingCharacters"
@@ -28,6 +29,7 @@ const CharactersList = (props) => {
       .then((data) => {
         setCharacters(data.list);
         setIsFirstRender(false);
+        setLoading(false);
       })
       .catch((error) => console.error(error));
   }, [props.paramsId]);
@@ -43,7 +45,6 @@ const CharactersList = (props) => {
             ...previousCharacters,
             ...data.list,
           ]);
-          setLoading(false);
         })
         .catch((error) => console.error(error))
         .finally(() => {
@@ -69,13 +70,25 @@ const CharactersList = (props) => {
     }
   };
 
+  if (loading) {
+    return <div className=" align-start text-[2rem]">No characters</div>;
+  }
+
   return (
     <>
       {characters.map((character) => (
         <div
           key={character.id}
-          className="w-[28rem] border-[1px] border-solid cursor-pointer "
-          onClick={() => setChosenCharacter(character)}
+          className="w-[28rem] border-[1px] border-solid cursor-pointer flex-grow md:flex-grow-0 mx-[0.5rem] md:mx-0"
+          onClick={() =>
+            setClickedCharacters((prev) => [
+              ...prev,
+              {
+                id: character.id,
+                name: `${character.prefix} ${character.name} ${character.lastName}`,
+              },
+            ])
+          }
         >
           <Link to={`/character/${character.id}`}>
             <img src={`${character.imageUrl}/${character.id}`} alt="image" />
@@ -86,9 +99,6 @@ const CharactersList = (props) => {
           </Link>
         </div>
       ))}
-      <div>
-        <Loader />
-      </div>
     </>
   );
 };

@@ -5,7 +5,8 @@ import { CharacterContext } from "../context/CharacterContext";
 import { useParams } from "react-router-dom";
 
 const CharacterInfo = (props) => {
-  const { chosenCharacter, setChosenCharacter } = useContext(CharacterContext);
+  const { clickedCharacters, setClickedCharacters } =
+    useContext(CharacterContext);
   const [character, setChacarter] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,15 +25,15 @@ const CharacterInfo = (props) => {
   }
 
   return (
-    <div className="mt-[3rem] px-[2rem]">
-      <div className="flex gap-[2rem] w-full items-center">
+    <div className="mt-[1rem] px-[2rem]">
+      <div className="flex flex-col md:flex-row gap-[0.5rem] w-full md:items-center">
         <img
-          className=" w-[280px] "
+          className=" md:w-[280px] w-full h-[200px] object-cover "
           src={`${character.imageUrl}/${character.id}`}
           alt=""
         />
-        <div className="flex-grow ">
-          <fieldset className="border-[1.5px] border-gray-500 p-[1rem] text-[1.6rem]">
+        <div className="md:flex-grow ">
+          <fieldset className="border-[1.5px] border-gray-500 p-[1rem] text-[1.6rem] md:ml-[2rem]">
             <legend className="ml-[0.1rem] px-[0.5rem]">info</legend>
 
             <p className="font-bold">{`${character.prefix} ${character.name} ${character.lastName}`}</p>
@@ -55,8 +56,8 @@ const CharacterInfo = (props) => {
           </fieldset>
         </div>
 
-        <div className="">
-          <fieldset className="border-[1.5px] border-gray-500 p-[1rem] text-[1.6rem] w-[20rem]">
+        <div className="flex-grow md:flex-grow-0">
+          <fieldset className="border-[1.5px] border-gray-500 p-[1rem] text-[1.6rem] md:w-[20rem]">
             <legend className="">Address</legend>
 
             <p className="font-bold">{`${character.company.name} ${character.company.suffix}`}</p>
