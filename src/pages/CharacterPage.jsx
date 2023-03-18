@@ -19,7 +19,7 @@ const CharacterPage = () => {
     <div className="max-w-[1200px] mx-auto border-solid border-[1px]">
       <CharacterInfo paramsId={params.id} />
       <ClickedCharacters />
-      <div className="flex flex-wrap gap-[1.5rem] mx-auto justify-center">
+      <div className="mx-auto grid gap-y-[2rem] md:gap-x-[2rem] gap-x-[1rem] md:grid-cols-4 grid-cols-2 mx-auto px-[1rem] mt-[1rem]">
         {scrollIsFixed && (
           <CharactersList page="friends" paramsId={params.id} />
         )}

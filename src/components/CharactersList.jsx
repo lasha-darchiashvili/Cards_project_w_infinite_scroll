@@ -5,6 +5,7 @@ import CHARACTERS_BASE_URL from "../api/api";
 
 // As usual when srcoll event is triggered, scroll fires multiple times, which causes adding more cards than we want, during scroll.
 // This variable is created to solve this problem. Logic is - if during one scroll one fetch is already  active, during that scroll more fetches won't be triggered.
+// To achieve this we 'isFetchActive' to false initially, then when first fetch starts we set it to true and give scroll condition : if true no more fetching on that scroll
 let isFetchActive = false;
 
 const CharactersList = (props) => {
@@ -16,11 +17,13 @@ const CharactersList = (props) => {
   const { clickedCharacters, setClickedCharacters } =
     useContext(CharacterContext);
 
+  // two urls based where we use this component
   const firstCardsUrl =
     props.page === "LandingCharacters"
       ? `${CHARACTERS_BASE_URL}/1/20`
       : `${CHARACTERS_BASE_URL}/${props?.paramsId}/friends/1/20`;
 
+  // two urls based where we use this component
   const restCardsUrl =
     props.page === "LandingCharacters"
       ? `${CHARACTERS_BASE_URL}/${pageNumber}/20`
@@ -66,7 +69,7 @@ const CharactersList = (props) => {
     if (!isFetchActive && scrollTop + clientHeight + 20 >= scrollHeight) {
       setPageNumber((prevPageNumber) => prevPageNumber + 1);
 
-      //after first infinite scroll fetch it becomes true, so we avoid additional fetches
+      //after first infinite scroll fetch, it becomes true, so we avoid additional fetches
       isFetchActive = true;
     }
   };
@@ -84,7 +87,7 @@ const CharactersList = (props) => {
       {characters.map((character) => (
         <div
           key={character.id}
-          className="w-[28rem] border-[1px] border-solid cursor-pointer flex-grow md:flex-grow-0 mx-[0.5rem] md:mx-0"
+          className="w-fit border-[1px] border-solid cursor-pointer flex-grow md:flex-grow-0 mx-[0.5rem] md:mx-0"
           onClick={() => {
             setPageNumber(() => 1);
 
