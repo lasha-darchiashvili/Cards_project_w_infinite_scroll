@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import CHARACTERS_BASE_URL from "../api/api";
 
 // As usual when srcoll event is triggered, scroll fires multiple times, which causes adding more cards than we want, during scroll.
-// This variable is created to solve this problem. Logic is - if during one scroll one fetch is active, during that scroll more fetches won't be triggered.
+// This variable is created to solve this problem. Logic is - if during one scroll one fetch is already  active, during that scroll more fetches won't be triggered.
 let isFetchActive = false;
 
 const CharactersList = (props) => {
@@ -13,18 +13,26 @@ const CharactersList = (props) => {
   const [characters, setCharacters] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [isFirstRender, setIsFirstRender] = useState(true);
+  console.log(characters.length);
+
+  console.log("pagenumber", pageNumber);
 
   const { clickedCharacters, setClickedCharacters } =
     useContext(CharacterContext);
 
-  const url =
+  const firstCardsUrl =
+    props.page === "LandingCharacters"
+      ? `${CHARACTERS_BASE_URL}/1/20`
+      : `${CHARACTERS_BASE_URL}/${props?.paramsId}/friends/1/20`;
+
+  const restCardsUrl =
     props.page === "LandingCharacters"
       ? `${CHARACTERS_BASE_URL}/${pageNumber}/20`
       : `${CHARACTERS_BASE_URL}/${props?.paramsId}/friends/${pageNumber}/20`;
 
   // Is meant to fetch only first 20 cards
   useEffect(() => {
-    fetch(url)
+    fetch(firstCardsUrl)
       .then((response) => response.json())
       .then((data) => {
         setCharacters(data.list);
@@ -36,8 +44,8 @@ const CharactersList = (props) => {
 
   // Is meant to fetch additional 20 cards on scroll
   useEffect(() => {
-    if (!isFirstRender) {
-      fetch(url)
+    if (!isFirstRender && pageNumber !== 1) {
+      fetch(restCardsUrl)
         .then((response) => response.json())
         .then((data) => {
           console.log(pageNumber, "asd");
@@ -61,6 +69,7 @@ const CharactersList = (props) => {
 
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    console.log(!isFetchActive, scrollTop + clientHeight + 20 >= scrollHeight);
     if (!isFetchActive && scrollTop + clientHeight + 20 >= scrollHeight) {
       setPageNumber((prevPageNumber) => prevPageNumber + 1);
       console.log(scrollTop, clientHeight, scrollHeight);
@@ -71,7 +80,11 @@ const CharactersList = (props) => {
   };
 
   if (loading) {
-    return <div className=" align-start text-[2rem]">No characters</div>;
+    return (
+      <div className="text-[2rem]">
+        <p>No characters</p>
+      </div>
+    );
   }
 
   return (
@@ -80,15 +93,18 @@ const CharactersList = (props) => {
         <div
           key={character.id}
           className="w-[28rem] border-[1px] border-solid cursor-pointer flex-grow md:flex-grow-0 mx-[0.5rem] md:mx-0"
-          onClick={() =>
+          onClick={() => {
+            setPageNumber(() => 1);
+
             setClickedCharacters((prev) => [
               ...prev,
               {
                 id: character.id,
                 name: `${character.prefix} ${character.name} ${character.lastName}`,
               },
-            ])
-          }
+            ]);
+            window.scrollTo(0, 0);
+          }}
         >
           <Link to={`/character/${character.id}`}>
             <img src={`${character.imageUrl}/${character.id}`} alt="image" />

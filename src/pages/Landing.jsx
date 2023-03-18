@@ -7,7 +7,7 @@ const Landing = () => {
     <div>
       <div className="max-w-[1300px] flex flex-wrap gap-[1.5rem] mx-auto justify-center mt-[1rem]">
         {" "}
-        <CharactersList page="LandingCharacters" />;
+        <CharactersList page="LandingCharacters" />
       </div>
       <Loader />
     </div>
