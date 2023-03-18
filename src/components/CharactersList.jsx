@@ -2,34 +2,55 @@ import React, { useEffect, useContext, useState } from "react";
 import Loader from "./Loader";
 import { CharacterContext } from "../context/CharacterContext";
 import { Link } from "react-router-dom";
+import CHARACTERS_BASE_URL from "../api/api";
 
-let isActive = false;
+// As usual when srcoll event is triggered, scroll fires multiple times, which causes adding more cards than we want, during scroll.
+// This variable is created to solve this problem. Logic is - if during one scroll one fetch is active, during that scroll more fetches won't be triggered.
+let isFetchActive = false;
 
-const CharactersList = () => {
+const CharactersList = (props) => {
   const [loading, setLoading] = useState(true);
   const [characters, setCharacters] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   const { chosenCharacter, setChosenCharacter } = useContext(CharacterContext);
 
+  const url =
+    props.page === "LandingCharacters"
+      ? `${CHARACTERS_BASE_URL}/${pageNumber}/20`
+      : `${CHARACTERS_BASE_URL}/${props?.paramsId}/friends/${pageNumber}/20`;
+
+  // Is meant to fetch only first 20 cards
   useEffect(() => {
-    fetch(
-      `http://sweeftdigital-intern.eu-central-1.elasticbeanstalk.com/user/${pageNumber}/20`
-    )
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log(pageNumber, "asd");
-        setCharacters((previousCharacters) => [
-          ...previousCharacters,
-          ...data.list,
-        ]);
-        setLoading(false);
+        setCharacters(data.list);
+        setIsFirstRender(false);
       })
-      .catch((error) => console.error(error))
-      .finally(() => {
-        console.log("finaly");
-        if (pageNumber > 1) isActive = false;
-      });
+      .catch((error) => console.error(error));
+  }, [props.paramsId]);
+
+  // Is meant to fetch additional 20 cards on scroll
+  useEffect(() => {
+    if (!isFirstRender) {
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(pageNumber, "asd");
+          setCharacters((previousCharacters) => [
+            ...previousCharacters,
+            ...data.list,
+          ]);
+          setLoading(false);
+        })
+        .catch((error) => console.error(error))
+        .finally(() => {
+          console.log("finaly");
+          if (pageNumber > 1) isFetchActive = false;
+        });
+    }
   }, [pageNumber]);
 
   useEffect(() => {
@@ -39,20 +60,21 @@ const CharactersList = () => {
 
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-
-    if (!isActive && scrollTop + clientHeight + 20 >= scrollHeight) {
+    if (!isFetchActive && scrollTop + clientHeight + 20 >= scrollHeight) {
       setPageNumber((prevPageNumber) => prevPageNumber + 1);
       console.log(scrollTop, clientHeight, scrollHeight);
-      isActive = true;
+
+      //after first infinite scroll fetch it becomes true, so we avoid additional fetches
+      isFetchActive = true;
     }
   };
 
   return (
-    <div className="max-w-[1300px] flex flex-wrap gap-[1.5rem] mx-auto justify-center mt-[1rem]">
+    <>
       {characters.map((character) => (
         <div
           key={character.id}
-          className="w-[300px] border-[1px] border-solid cursor-pointer "
+          className="w-[28rem] border-[1px] border-solid cursor-pointer "
           onClick={() => setChosenCharacter(character)}
         >
           <Link to={`/character/${character.id}`}>
@@ -67,7 +89,7 @@ const CharactersList = () => {
       <div>
         <Loader />
       </div>
-    </div>
+    </>
   );
 };
 
