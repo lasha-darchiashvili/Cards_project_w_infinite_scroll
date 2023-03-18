@@ -1,5 +1,4 @@
 import React, { useEffect, useContext, useState } from "react";
-import Loader from "./Loader";
 import { CharacterContext } from "../context/CharacterContext";
 import { Link } from "react-router-dom";
 import CHARACTERS_BASE_URL from "../api/api";
@@ -13,9 +12,6 @@ const CharactersList = (props) => {
   const [characters, setCharacters] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [isFirstRender, setIsFirstRender] = useState(true);
-  console.log(characters.length);
-
-  console.log("pagenumber", pageNumber);
 
   const { clickedCharacters, setClickedCharacters } =
     useContext(CharacterContext);
@@ -48,7 +44,6 @@ const CharactersList = (props) => {
       fetch(restCardsUrl)
         .then((response) => response.json())
         .then((data) => {
-          console.log(pageNumber, "asd");
           setCharacters((previousCharacters) => [
             ...previousCharacters,
             ...data.list,
@@ -56,7 +51,6 @@ const CharactersList = (props) => {
         })
         .catch((error) => console.error(error))
         .finally(() => {
-          console.log("finaly");
           if (pageNumber > 1) isFetchActive = false;
         });
     }
@@ -69,10 +63,8 @@ const CharactersList = (props) => {
 
   const handleScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    console.log(!isFetchActive, scrollTop + clientHeight + 20 >= scrollHeight);
     if (!isFetchActive && scrollTop + clientHeight + 20 >= scrollHeight) {
       setPageNumber((prevPageNumber) => prevPageNumber + 1);
-      console.log(scrollTop, clientHeight, scrollHeight);
 
       //after first infinite scroll fetch it becomes true, so we avoid additional fetches
       isFetchActive = true;

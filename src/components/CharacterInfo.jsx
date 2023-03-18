@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useContext } from "react";
 import CHARACTERS_BASE_URL from "../api/api";
-import { CharacterContext } from "../context/CharacterContext";
-import { useParams } from "react-router-dom";
 
 const CharacterInfo = (props) => {
-  const { clickedCharacters, setClickedCharacters } =
-    useContext(CharacterContext);
   const [character, setChacarter] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,16 +36,16 @@ const CharacterInfo = (props) => {
             <p className="mt-[1.5rem]">
               <span className="underline">Email</span>: {character.email}
             </p>
-            <p className="">
+            <p>
               <span className="underline">Ip Address</span>: {character.ip}
             </p>
-            <p className="">
+            <p>
               <span className="underline">Ip Address</span>: {character.ip}
             </p>
-            <p className="">
+            <p>
               <span className="underline">Job Area</span>: {character.jobArea}
             </p>
-            <p className="">
+            <p>
               <span className="underline">Job Type</span>: {character.jobType}
             </p>
           </fieldset>
@@ -61,22 +56,22 @@ const CharacterInfo = (props) => {
             <legend className="">Address</legend>
 
             <p className="font-bold">{`${character.company.name} ${character.company.suffix}`}</p>
-            <p className="">
+            <p>
               <span className="underline">City</span>: {character.address.city}
             </p>
-            <p className="">
+            <p>
               <span className="underline">Country</span>:{" "}
               {character.address.country}
             </p>
-            <p className="">
+            <p>
               <span className="underline">State</span>:{" "}
               {character.address.state}
             </p>
-            <p className="">
+            <p>
               <span className="underline">Street Adress</span>:{" "}
               {character.address.streetAddress}
             </p>
-            <p className="">
+            <p>
               <span className="underline">ZIO</span>:{" "}
               {character.address.zipCode}
             </p>

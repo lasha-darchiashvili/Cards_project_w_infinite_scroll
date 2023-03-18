@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CharacterInfo from "../components/CharacterInfo";
 import CharactersList from "../components/CharactersList";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ClickedCharacters from "../components/ClickedCharacters";
 import Loader from "../components/Loader";
 
