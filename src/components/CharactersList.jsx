@@ -87,7 +87,7 @@ const CharactersList = (props) => {
       {characters.map((character) => (
         <div
           key={character.id}
-          className="w-fit border-[1px] border-solid cursor-pointer flex-grow md:flex-grow-0 mx-[0.5rem] md:mx-0"
+          className="w-full border-[1px] border-solid cursor-pointer flex-grow md:flex-grow-0 mx-[0.5rem] md:mx-0"
           onClick={() => {
             setPageNumber(() => 1);
 

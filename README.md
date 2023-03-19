@@ -61,12 +61,6 @@ npm start
 
 #
 
-### Deployment
-
-Coming soon
-
-#
-
 ### Additional Info
 
 Also in applciation is used a little bit react-context and react router.
